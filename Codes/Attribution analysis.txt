@@ -26,7 +26,7 @@ glimpse(data_standardized)
 sem_model <- "
 # latent
 energy =~ CoalImport103 + CrudeOilImport
-IrrigationCapacity =~ WaterConsumptionCoefficient2 + TotalDamCapacity
+IrrigationCapacity =~ WaterConsumptionCoefficient + TotalDamCapacity
 
 # path
 CoalProduction ~ energy
