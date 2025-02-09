@@ -34,7 +34,7 @@ after_2006 <- data_select_slice$NK_LandAreaEquippedForIrrigation[data_select_sli
 wilcox_test_result <- wilcox.test(before_2006, after_2006)
 print(wilcox_test_result)
 
-# 数据准备
+# dataframe
 df <- data.frame(
   year = rep(c("Before 2006", "After 2006"), c(length(before_2006), length(after_2006))),
   efficiency = c(before_2006, after_2006)
