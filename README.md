@@ -2,7 +2,7 @@
 
 ## System Requirements
 - Operating System: Windows 10 (64-bit) with x64-based processor.
-- Software and Platforms: Google Earth Engine (GEE) and R v4.2.1
+- Software and Platforms: Google Earth Engine (GEE), R v4.2.1, and Matlab 2018a
 - Dependencies:
   - Google Earth Engine: Requires a Google account for activation and access.
   - R v4.2.1: Requires the installation of the following R packages: `"tidyverse", "rio", "ggplot2", "ggplotify", "ggimage", "reshape2", "cowplot", "readxl", "ggpubr", "ggsci", "RColorBrewer", "ggsignif"`
