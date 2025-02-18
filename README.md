@@ -15,3 +15,6 @@
 - Google Earth Engine: Directly accesses data from Google Assets, eliminating the need for local storage. Than run the code: *Drought assessment.txt* and *GPP series.txt*
 - R v4.2.1: The dataset (*Data_Statistics.xlsx*) is provided within the repository. To generate SEM (Structural Equation Modeling) results, users need to load the dataset and run the provided script (*Attribution_analysis.txt*) in R studio.
 - Expected Run Time: Running the demo script on a standard desktop computer should take only a few seconds.
+
+## License
+This project is licensed under the MIT License, an Open Source Initiative (OSI)-approved license. 
