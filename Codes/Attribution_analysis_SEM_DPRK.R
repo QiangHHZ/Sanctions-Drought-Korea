@@ -1,0 +1,80 @@
+# =========================
+# Workspace & Package Setup
+# =========================
+
+# Set working directory
+setwd("F:/1 Drought in Korea/4 Figures/Fig. SEM")
+
+# Packages
+library(rio)
+library(tidyverse)
+library(lavaan)
+library(blavaan)
+library(regsem)
+library(readxl)
+library(writexl)
+
+# =====================
+# Load and Prepare Data
+# =====================
+
+# Import cleaned and finalized statistical dataset
+data <- import("Data_Statistics.xlsx")
+
+# Filter time series: retain data from 1995 onwards
+data_slice <- data[-c(1:15), ]
+
+# Select relevant indicators for SEM (both DPRK and ROK)
+data_slice <- data_slice %>%
+  select(year, 
+         NK_RiceYield,
+         NK_IrrigatedAgricultureWaterUseEfficiency,
+         NK_WaterConsumptionCoefficient,
+         NK_TotalDamCapacity,
+         NK_LandAreaEquippedForIrrigation,
+         NK_CoalProduction,
+         NK_CoalImport,
+         NK_CrudeOilImport,
+         NK_ElectricityGeneration)
+
+# Standardize all variables using Z-score normalization
+data_standardized <- as.data.frame(scale(data_slice))
+
+
+# ===================================
+# SEM
+# ===================================
+
+# 
+sem_model_dprk <- "
+  # Latent variables
+  energy =~ NK_CoalImport + NK_CrudeOilImport
+  IrrigationCapacity =~ NK_WaterConsumptionCoefficient + NK_TotalDamCapacity + NK_IrrigatedAgricultureWaterUseEfficiency
+
+  # Structural paths
+  NK_CoalProduction ~ energy
+  NK_ElectricityGeneration ~ energy + NK_CoalProduction
+  IrrigationCapacity ~ NK_ElectricityGeneration
+  NK_RiceYield ~ IrrigationCapacity
+"
+
+fit_dprk <- sem(sem_model_dprk, data = data_standardized, missing = "ML", em.h1.iter.max = 2000)
+
+summary(fit_dprk, fit.measures = TRUE, standardized = TRUE)
+
+# Note on estimation warnings:
+# A warning was generated during SEM estimation indicating that a few variances 
+# were slightly negative (e.g., -0.013 for crude oil import, -0.044 for dam capacity). 
+# This situation can arise when working with limited or incomplete time series data—
+# as is common in the DPRK context—particularly for variables like irrigated agriculture 
+# water use efficiency, which only has data from 1995 onward. 
+
+# Importantly, the model converged normally, all key parameters were estimated, and 
+# the minor negative variances (e.g., -0.013 for NK_CrudeOilImport, -0.044 for NK_TotalDamCapacity)
+# were well within acceptable thresholds (commonly considered tolerable when close to zero).
+# More crucially, the primary structural paths were stable and interpretable, with most 
+# coefficients not statistically significant—highlighting that the hypothesized causal 
+# chain is not clearly supported in the DPRK case, which is an important finding in itself.
+
+# The warnings observed here do not affect the interpretation or validity of the results. 
+# This point has also been clarified in the SI.
