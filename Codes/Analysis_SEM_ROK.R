@@ -18,13 +18,13 @@ library(writexl)
 # Load and Prepare Data
 # =====================
 
-# Import cleaned and finalized statistical dataset
+# Import dataset
 data <- import("Data_Statistics.xlsx")
 
-# Filter time series: retain data from 1995 onwards
+# Filter data sice 1995
 data_slice <- data[-c(1:15), ]
 
-# Select relevant indicators for SEM (both DPRK and ROK)
+# Select relevant indicators
 data_slice <- data_slice %>%
   select(year, 
          SK_RiceYield,
@@ -37,7 +37,7 @@ data_slice <- data_slice %>%
          SK_CrudeOilImport,
          SK_ElectricityGeneration)
 
-# Standardize all variables using Z-score normalization
+# Standardize all variables 
 data_standardized <- as.data.frame(scale(data_slice))
 
 # ===================================
