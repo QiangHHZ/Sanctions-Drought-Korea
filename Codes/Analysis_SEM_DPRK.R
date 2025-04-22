@@ -45,7 +45,6 @@ data_standardized <- as.data.frame(scale(data_slice))
 # SEM
 # ===================================
 
-# 
 sem_model_dprk <- "
   # Latent variables
   energy =~ NK_CoalImport + NK_CrudeOilImport
