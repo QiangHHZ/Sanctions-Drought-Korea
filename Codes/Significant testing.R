@@ -75,4 +75,4 @@ combined_plot <- ggarrange(p1, p2, ncol = 2, labels = "auto", align = "v",
                            font.label = list(size = 12, color = "black", face = "plain"))
 combined_plot
 
-ggsave("Fig2_line_SignificantTesting_R4.png", plot = combined_plot, height = 5, width = 12, units = "cm", dpi = 600)
+ggsave("Fig2_line_SignificantTesting.png", plot = combined_plot, height = 5, width = 12, units = "cm", dpi = 600)
