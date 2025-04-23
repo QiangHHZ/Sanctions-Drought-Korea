@@ -27,19 +27,19 @@ data_slice <- data[-c(1:15), ]
 # Select relevant indicators
 data_slice <- data_slice %>%
   select(year, 
-         NK_RiceYield,
-         NK_IrrigatedAgricultureWaterUseEfficiency,
-         NK_WaterConsumptionCoefficient,
-         NK_TotalDamCapacity,
-         NK_LandAreaEquippedForIrrigation,
-         NK_CoalProduction,
-         NK_CoalImport,
-         NK_CrudeOilImport,
-         NK_ElectricityGeneration)
+         DPRK_RiceYield,
+         DPRK_IrrigatedAgricultureWaterUseEfficiency,
+         DPRK_WaterConsumptionCoefficient,
+         DPRK_TotalDamCapacity,
+         DPRK_LandAreaEquippedForIrrigation,
+         DPRK_CoalProduction,
+         DPRK_CoalImport,
+         DPRK_CrudeOilImport,
+         DPRK_ElectricityGeneration)
 
 # Standardize all variables 
 data_standardized <- as.data.frame(scale(data_slice))
-
+glimpse(data_standardized)
 
 # ===================================
 # SEM
@@ -47,14 +47,14 @@ data_standardized <- as.data.frame(scale(data_slice))
 
 sem_model_dprk <- "
   # Latent variables
-  energy =~ NK_CoalImport + NK_CrudeOilImport
-  IrrigationCapacity =~ NK_WaterConsumptionCoefficient + NK_TotalDamCapacity + NK_IrrigatedAgricultureWaterUseEfficiency
+  energy =~ DPRK_CoalImport + DPRK_CrudeOilImport
+  IrrigationCapacity =~ DPRK_WaterConsumptionCoefficient + DPRK_TotalDamCapacity + DPRK_IrrigatedAgricultureWaterUseEfficiency
 
   # Structural paths
-  NK_CoalProduction ~ energy
-  NK_ElectricityGeneration ~ energy + NK_CoalProduction
-  IrrigationCapacity ~ NK_ElectricityGeneration
-  NK_RiceYield ~ IrrigationCapacity
+  DPRK_CoalProduction ~ energy
+  DPRK_ElectricityGeneration ~ energy + DPRK_CoalProduction
+  IrrigationCapacity ~ DPRK_ElectricityGeneration
+  DPRK_RiceYield ~ IrrigationCapacity
 "
 
 fit_dprk <- sem(sem_model_dprk, data = data_standardized, missing = "ML", em.h1.iter.max = 2000)

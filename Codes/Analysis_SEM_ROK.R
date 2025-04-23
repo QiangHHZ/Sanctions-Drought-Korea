@@ -27,18 +27,19 @@ data_slice <- data[-c(1:15), ]
 # Select relevant indicators
 data_slice <- data_slice %>%
   select(year, 
-         SK_RiceYield,
-         SK_IrrigatedAgricultureWaterUseEfficiency,
-         SK_WaterConsumptionCoefficient,
-         SK_TotalDamCapacity,
-         SK_LandAreaEquippedForIrrigation,
-         SK_CoalProduction,
-         SK_CoalImport,
-         SK_CrudeOilImport,
-         SK_ElectricityGeneration)
+         ROK_RiceYield,
+         ROK_IrrigatedAgricultureWaterUseEfficiency,
+         ROK_WaterConsumptionCoefficient,
+         ROK_TotalDamCapacity,
+         ROK_LandAreaEquippedForIrrigation,
+         ROK_CoalProduction,
+         ROK_CoalImport,
+         ROK_CrudeOilImport,
+         ROK_ElectricityGeneration)
 
 # Standardize all variables 
 data_standardized <- as.data.frame(scale(data_slice))
+glimpse(data_standardized)
 
 # ===================================
 # SEM
@@ -46,14 +47,14 @@ data_standardized <- as.data.frame(scale(data_slice))
 
 sem_model_rok <- "
   # Latent variables
-  energy =~ SK_CrudeOilImport + SK_CoalImport
-  IrrigationCapacity =~ SK_TotalDamCapacity + SK_WaterConsumptionCoefficient + SK_IrrigatedAgricultureWaterUseEfficiency
+  energy =~ ROK_CrudeOilImport + ROK_CoalImport
+  IrrigationCapacity =~ ROK_TotalDamCapacity + ROK_WaterConsumptionCoefficient + ROK_IrrigatedAgricultureWaterUseEfficiency
 
   # Structural paths
-  SK_CoalProduction ~ energy
-  SK_ElectricityGeneration ~ energy + SK_CoalProduction
-  IrrigationCapacity ~ SK_ElectricityGeneration
-  SK_RiceYield ~ IrrigationCapacity
+  ROK_CoalProduction ~ energy
+  ROK_ElectricityGeneration ~ energy + ROK_CoalProduction
+  IrrigationCapacity ~ ROK_ElectricityGeneration
+  ROK_RiceYield ~ IrrigationCapacity
 "
 
 fit_rok <- sem(sem_model_rok, data = data_standardized, missing = "ML", em.h1.iter.max = 2000)
