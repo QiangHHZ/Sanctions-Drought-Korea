@@ -12,8 +12,8 @@
 - R v4.2.1: Install the required R packages using the `install.packages()` function. The full installation process typically takes less than one minute on a standard desktop computer. 
 
 ## Instructions for use
-- Google Earth Engine: Directly accesses data from Google Assets, eliminating the need for local storage. Than run the code: *Drought assessment.txt* and *GPP series.txt*
-- R v4.2.1: The dataset (*Data_Statistics.xlsx*) is provided within the repository. To generate SEM results, users need to load the dataset and run the provided script (*Analysis_SEM_DPRK.R* and *Analysis_SEM_DROK.R*) in R studio.
+- Google Earth Engine: Directly accesses data from Google Assets, eliminating the need for local storage. Then run the code: *Drought assessment.txt* and *GPP series.txt*
+- R v4.2.1: The dataset (*Data_Statistics.xlsx*) is available in the repository, with with unit details provided in the excel file (*Data_Statistics_UnitInfo.xlsx*). To generate SEM results, users need to load the dataset and then run the provided scripts (*Analysis_SEM_DPRK.R* and *Analysis_SEM_DROK.R*) in R studio or other compatible R environment. 
 - Expected Run Time: Running the demo script on a standard desktop computer should take only a few seconds.
 
 ## License
