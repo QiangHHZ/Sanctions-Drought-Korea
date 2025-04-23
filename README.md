@@ -14,7 +14,7 @@
 ## Instructions for use
 - Google Earth Engine: Directly accesses data from Google Assets, eliminating the need for local storage. Then run the code: *Drought assessment.txt* and *GPP series.txt*
 - R v4.2.1: The dataset (*Data_Statistics.xlsx*) is available in the repository, with with unit details provided in the excel file (*Data_Statistics_UnitInfo.xlsx*). To generate SEM results, users need to load the dataset and then run the provided scripts (*Analysis_SEM_DPRK.R* and *Analysis_SEM_DROK.R*) in R studio or other compatible R environment. 
-- Expected Run Time: Running the demo script on a standard desktop computer should take only a few seconds.
+- Expected Run Time: Running the demo script on a standard desktop computer should take tens of seconds.
 
 ## License
 This project is licensed under the MIT License, an Open Source Initiative (OSI)-approved license. 
