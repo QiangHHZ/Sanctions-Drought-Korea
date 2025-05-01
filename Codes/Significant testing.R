@@ -13,7 +13,7 @@ library(patchwork)
 raw_data <- read_excel("Data_Statistics.xlsx")
 
 data_irrigation <- raw_data %>% 
-  select(year, NK_LandAreaEquippedForIrrigation, NK_IrrigatedAgricultureWaterUseEfficiency) %>% 
+  select(year, DPRK_LandAreaEquippedForIrrigation, DPRK_IrrigatedAgricultureWaterUseEfficiency) %>% 
   filter(year >= 1995)
 
 # Function for Wilcoxon test and boxplot
@@ -55,7 +55,7 @@ create_boxplot <- function(df, var, y_label, y_limits, filename) {
 # Plot A: Cropland equipped for irrigation
 p1 <- create_boxplot(
   data_irrigation,
-  NK_LandAreaEquippedForIrrigation,
+  DPRK_LandAreaEquippedForIrrigation,
   "Cropland equipped\nfor irrigation (%)",
   c(54, 58.5),
   "Fig2_irrigation.png"
@@ -64,7 +64,7 @@ p1 <- create_boxplot(
 # Plot B: Irrigated agriculture water use efficiency
 p2 <- create_boxplot(
   data_irrigation,
-  NK_IrrigatedAgricultureWaterUseEfficiency,
+  DPRK_IrrigatedAgricultureWaterUseEfficiency,
   expression("WUE (dollars /"~m^3~")"),
   c(0.32, 0.48),
   "Fig2_wue.png"
