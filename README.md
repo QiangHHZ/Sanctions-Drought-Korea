@@ -17,7 +17,7 @@
 - Expected Run Time: Running the demo script on a standard desktop computer should take tens of seconds.
 
 ## License
-MIT License
+MIT License 
 
 Copyright (c) 2025 Qiang Zhang, Chinese Academy of Sciences
 
