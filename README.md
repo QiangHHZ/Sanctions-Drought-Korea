@@ -9,7 +9,7 @@
 
 ## Installation Guide
 - Google Earth Engine: Requires registration with a Google account to enable access. No additional installation is needed for the cloud-based platform. 
-- R v4.2.1: Install the required R packages using the `install.packages()` function. The full installation process typically takes less than one minute on a standard desktop computer. 
+- R v4.2.1: Install the required R packages using the `install.packages()` function. The full installation process may take anywhere from a few minutes to several tens of minutes on a standard desktop computer, depending on the internet connection speed. 
 
 ## Instructions for use
 - Google Earth Engine: Directly accesses data from Google Assets, eliminating the need for local storage. Then run the code: *Drought assessment.txt* and *GPP series.txt*
