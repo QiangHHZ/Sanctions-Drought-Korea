@@ -1,4 +1,18 @@
 # ---------------------------
+# Input Data Information
+# ---------------------------
+# Note: Due to the large file size (~24GB), input data are not included in the repository.
+# Users need to download the following datasets manually:
+## TerraClimate: https://www.climatologylab.org/terraclimate.html
+## CHIRPS: https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_monthly/netcdf/
+## IMERG: https://search.earthdata.nasa.gov/search?q=GPM_3IMERGM&lat=36.3779296875&long=119.25000000000001&zoom=5
+
+# Then, save the downloaded files as follows in the "Input_nc" directory:
+## global_chirps-v2.0.monthly.nc
+## global_IMERG.nc
+## global_TerraClimate.nc
+
+# ---------------------------
 # Set environments
 # ---------------------------
 START_YEAR=1999
