@@ -3,7 +3,7 @@
 # =========================
 
 # Set working directory
-setwd("F:/1 Drought in Korea/4 Figures/Fig. SEM")
+setwd("your path")
 
 # Packages
 library(rio)
@@ -19,7 +19,7 @@ library(writexl)
 # =====================
 
 # Import dataset
-data <- import("Data_Statistics.xlsx")
+data <- import("./Data/Data_Statistics.xlsx")
 
 # Filter data sice 1995
 data_slice <- data[-c(1:15), ]

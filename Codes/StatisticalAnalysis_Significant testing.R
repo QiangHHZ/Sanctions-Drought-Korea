@@ -1,5 +1,5 @@
 # Set working directory
-setwd("/Users/Qiang/Documents/R/Work/Drought/Visualization")
+setwd("your path")
 
 # Load packages
 library(tidyverse)
@@ -10,7 +10,7 @@ library(ggpubr)
 library(patchwork)
 
 # Load data
-raw_data <- read_excel("Data_Statistics.xlsx")
+raw_data <- read_excel("./Data/Data_Statistics.xlsx")
 
 data_irrigation <- raw_data %>% 
   select(year, DPRK_LandAreaEquippedForIrrigation, DPRK_IrrigatedAgricultureWaterUseEfficiency) %>% 
