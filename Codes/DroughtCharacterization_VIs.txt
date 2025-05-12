@@ -1,3 +1,12 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////// upload data to GEE //////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var Korea = ee.FeatureCollection("users/QIANG/Boundry/Boundry_Korea"),
+    Rice_Korea_500m_sameMOD = ee.Image("users/QiangZhang/Rice_neAsia_v6v01_2016_WGS84_SameMOD_extract");
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////// Functions ////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //MCD43A4
 function getNBARVIs(img){
   var ndvi = img.normalizedDifference(['Nadir_Reflectance_Band2','Nadir_Reflectance_Band1']);
@@ -19,11 +28,14 @@ function getNBARVIs(img){
             .copyProperties(img,['system:time_end','system:time_start']);
   }
 
+// rick mask 
 function updatemask(img){
   return img.updateMask(Rice_Korea_500m_sameMOD);
 }
 
-// ***Preparing the dataset we need***
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////// ***Preparing the dataset we need***/////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Multi year 2003, 2004, 2006, 2010, 2011, 2012, 2013
 var Collection0304 = ee.ImageCollection('MODIS/006/MCD43A4')
                        .filter(ee.Filter.calendarRange(2003,2004,'year'))
@@ -32,34 +44,32 @@ var Collection0304 = ee.ImageCollection('MODIS/006/MCD43A4')
                        .map(getNBARVIs)
                        .map(updatemask)
                        ; 
+// print(Collection0304,"Collection0304");
 var Collection06 = ee.ImageCollection('MODIS/006/MCD43A4')
                      .filter(ee.Filter.calendarRange(2006,2006,'year'))
-                      // .filter(ee.Filter.calendarRange(5,9,'month'))
                      .filterBounds(Korea)
                      .map(getNBARVIs)
                      .map(updatemask)
                      ; 
+// print(Collection06,"Collection06");
 var Collection10 = ee.ImageCollection('MODIS/006/MCD43A4')
                        .filter(ee.Filter.calendarRange(2010,2010,'year'))
-                       // .filter(ee.Filter.calendarRange(5,9,'month'))
                        .filterBounds(Korea)
                        .map(getNBARVIs)
                        .map(updatemask)
                        ; 
 var Collection1213 = ee.ImageCollection('MODIS/006/MCD43A4')
                        .filter(ee.Filter.calendarRange(2012,2013,'year'))
-                       // .filter(ee.Filter.calendarRange(5,9,'month'))
                        .filterBounds(Korea)
                        .map(getNBARVIs)
                        .map(updatemask)
                        ; 
-
+// print(Collection1013,"Collection1013");
 var CollectionBaseline =Collection0304.merge(Collection06).merge(Collection10).merge(Collection1213);
-
+print(CollectionBaseline,"CollectionBaseline")
 //
 var Anomalyyear = ee.ImageCollection('MODIS/006/MCD43A4')
                        .filter(ee.Filter.calendarRange(2015,2015,'year'))
-                       // .filter(ee.Filter.calendarRange(5,9,'month'))
                        .filterBounds(Korea)
                        .map(getNBARVIs)
                        .map(updatemask)
@@ -67,7 +77,9 @@ var Anomalyyear = ee.ImageCollection('MODIS/006/MCD43A4')
 print(Anomalyyear,'Anomalyyear')
 // Map.addLayer(Anomalyyear.first(), {}, 'Anomalyyear')
 
-// ***Monthly composite***
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////// ***Monthly composite***/////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var start = ee.Date('2015-01-01');
 var CollectionBaseline_Composites = ee.ImageCollection(ee.List.sequence(1,12,1).map(function(m){
   var m = ee.Number(m)
@@ -89,18 +101,19 @@ var Anomalyyear_Composites = ee.ImageCollection(ee.List.sequence(1,12,1).map(fun
 }));
 print(Anomalyyear_Composites,'Anomalyyear_Composites')
 
-
-// baseline max, min, and range 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////// baseline max, min, and range ///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var CollectionBaseline_max = CollectionBaseline.reduce(ee.Reducer.max());
-
+// print(CollectionBaseline_max,CollectionBaseline_max)
 var CollectionBaseline_min = CollectionBaseline.reduce(ee.Reducer.min());
-
+// print(CollectionBaseline_min,CollectionBaseline_min)
 var Range = CollectionBaseline_max.subtract(CollectionBaseline_min)
+print(Range,'Range')
 
-
-// growing 2015 and baseline 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////// growing 2015 and baseline //////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Multi year 2003, 2004, 2006, 2010, 2011, 2012, 2013
 var Col0304 = ee.ImageCollection('MODIS/006/MCD43A4')
                        .filter(ee.Filter.calendarRange(2003,2004,'year'))
@@ -130,7 +143,7 @@ var Col1213 = ee.ImageCollection('MODIS/006/MCD43A4')
                        .map(getNBARVIs)
                        .map(updatemask)
                        ; 
-
+// var CollectionBaseline =Collection0304.merge(Collection06).merge(Collection1013);
 var ColBaseline =Col0304.merge(Col06).merge(Col10).merge(Col1213);
 // print(ColBaseline,"ColBaseline")
 //
@@ -171,7 +184,7 @@ var Anomalyyear2015Mean = Anomaly_Composites.reduce(ee.Reducer.mean());
 print(Anomalyyear2015Mean,"Anomalyyear2015Mean");
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// calculate relative chagne /////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////// calculate relative chagne /////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var difference = Anomalyyear2015Mean.subtract(MultiyearMean);
 // print(difference,"difference")
@@ -179,10 +192,34 @@ var difference = Anomalyyear2015Mean.subtract(MultiyearMean);
 
 var RelativeChange = difference.divide(Range)
 print(RelativeChange,"RelativeChange")
-Map.addLayer(RelativeChange, {}, 'RelativeChange')
+// Map.addLayer(RelativeChange, {}, 'RelativeChange')
 
 
-// ***Export to Drive***
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////// ***Export to Drive***/////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Export.image.toDrive({  
+  image: RelativeChange.select("evi_mean_mean"),  
+  description: "RelativeChange_EVI",  
+  fileNamePrefix: "RelativeChange_EVI",
+  folder: "Vegetation anomalies",  
+  scale: 500,  
+  region: Korea,  
+  crs: "EPSG:4326",  
+  maxPixels: 1e13  
+});
+
+Export.image.toDrive({  
+  image: RelativeChange.select("nirv_mean_mean"),  
+  description: "RelativeChange_NIRv",  
+  fileNamePrefix: "RelativeChange_NIRv",
+  folder: "Vegetation anomalies",  
+  scale: 500,  
+  region: Korea,  
+  crs: "EPSG:4326",  
+  maxPixels: 1e13  
+});
+
 Export.image.toDrive({  
   image: RelativeChange.select("lswi_mean_mean"),  
   description: "RelativeChange_LSWI",  
