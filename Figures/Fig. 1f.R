@@ -14,7 +14,7 @@ library(tidyverse)
 
 # Load and process SPI and CSIF data -------------------------------------------
 # Load Meteorological Drought data (SPI index)
-MeteorologicalDrought <- raster("./Results/Fig. 1c_spi3_201506_09mean_RiceAll.tif")
+MeteorologicalDrought <- raster("./Results/Fig. 1c_SPI.tif")
 MeteorologicalDrought
 
 # Load Agricultural Productivity data (CSIF Relative Change)
