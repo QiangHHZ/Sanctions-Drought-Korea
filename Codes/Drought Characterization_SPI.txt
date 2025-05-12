@@ -1,0 +1,109 @@
+# ---------------------------
+# Input Data Information
+# ---------------------------
+# Note: Due to the large file size (~24GB), input data are not included in the repository.
+# Users need to download the following datasets manually:
+## TerraClimate: https://www.climatologylab.org/terraclimate.html
+## CHIRPS: https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_monthly/netcdf/
+## IMERG: https://search.earthdata.nasa.gov/search?q=GPM_3IMERGM&lat=36.3779296875&long=119.25000000000001&zoom=5
+
+# Then, save the downloaded files as follows in the "Input_nc" directory:
+## global_chirps-v2.0.monthly.nc
+## global_IMERG.nc
+## global_TerraClimate.nc
+
+# ---------------------------
+# Set environments
+# ---------------------------
+START_YEAR=1999
+END_YEAR=2020
+REGION="korea"
+LON_MIN=123.00
+LON_MAX=131.00
+LAT_MIN=32.00
+LAT_MAX=44.00
+BASE_PATH="/Users/Qiang/Documents/R/Work"
+INPUT_PATH="${BASE_PATH}/${REGION}/SPI/Global/Input_nc"
+OUTPUT_PATH="${BASE_PATH}/${REGION}/SPI/Global/Output_nc"
+TEMP_PATH="${BASE_PATH}/${REGION}/SPI/Global/Temp"
+FITTING_PATH="${BASE_PATH}/${REGION}/SPI/Global/Fitting"
+OUTPUT_TIF="${BASE_PATH}/${REGION}/SPI/Global/Output_TIF"
+
+# Ensure output directories are available for storing results
+mkdir -p $OUTPUT_PATH $TEMP_PATH $FITTING_PATH $OUTPUT_TIF
+
+# ---------------------------
+# Functions 
+# ---------------------------
+# Function to process SPI calculation 
+process_spi () {
+    local dataset=$1
+    local var_name=$2
+    local scales=$3
+
+    # Run SPI calculation 
+    spi --periodicity monthly --scales $scales \
+        --calibration_start_year $START_YEAR \
+        --calibration_end_year $END_YEAR \
+        --netcdf_precip "${INPUT_PATH}/${dataset}.nc" \
+        --var_name_precip $var_name \
+        --output_file_base "${OUTPUT_PATH}/${dataset}" \
+        --multiprocessing all \
+        --save_params "${FITTING_PATH}/${dataset}_fitting.nc" \
+        --overwrite
+}
+
+# Function to reorder NetCDF dimensions 
+reorder_nc () {
+    local input_nc=$1
+    local output_nc=$2
+    
+    ncpdq -a time,lat,lon $input_nc $output_nc
+}
+
+# Function to crop the dataset to Korea (DPRK and ROK)
+crop_region () {
+    local input_nc=$1
+    local output_nc=$2
+    
+    cdo sellonlatbox,$LON_MIN,$LON_MAX,$LAT_MIN,$LAT_MAX $input_nc $output_nc
+}
+
+# Function to convert .nc to .tif 
+convert_to_tif () {
+    local input_nc=$1
+    local prefix=$2
+    
+    for t in $(cdo showdate $input_nc); do
+        
+        cdo seldate,$t $input_nc ${TEMP_PATH}/dummy.nc
+        gdal_translate -of GTiff -a_ullr $LON_MIN $LAT_MAX $LON_MAX $LAT_MIN \
+                       -a_srs EPSG:4326 -co COMPRESS=LZW -co PREDICTOR=1 \
+                       ${TEMP_PATH}/dummy.nc "${OUTPUT_TIF}/${prefix}_$t.tif"
+        rm ${TEMP_PATH}/dummy.nc
+    done
+    
+}
+
+# ---------------------------
+# Processing
+# ---------------------------
+# Start SPI processing for each dataset
+process_spi "global_chirps-v2.0.monthly" "precip" "1 3 "
+process_spi "global_IMERG" "precipitation" "1 3 "
+process_spi "global_TerraClimate" "ppt" "1 3 "
+
+# Reorder the dimensions for proper processing
+reorder_nc "${OUTPUT_PATH}/global_chirps-v2.0.monthly_spi_gamma_3_month.nc" "${TEMP_PATH}/chirps_3_month_rev.nc"
+reorder_nc "${OUTPUT_PATH}/global_IMERG_spi_gamma_3_month.nc" "${TEMP_PATH}/imerg_3_month_rev.nc"
+reorder_nc "${OUTPUT_PATH}/global_TerraClimate_spi_gamma_3_month.nc" "${TEMP_PATH}/terraclimate_3_month_rev.nc"
+
+# Crop the datasets to Korea
+crop_region "${TEMP_PATH}/chirps_3_month_rev.nc" "${TEMP_PATH}/chirps_korea.nc"
+crop_region "${TEMP_PATH}/imerg_3_month_rev.nc" "${TEMP_PATH}/imerg_korea.nc"
+crop_region "${TEMP_PATH}/terraclimate_3_month_rev.nc" "${TEMP_PATH}/terraclimate_korea.nc"
+
+# Convert the processed nc to tif
+convert_to_tif "${TEMP_PATH}/chirps_korea.nc" "chirps"
+convert_to_tif "${TEMP_PATH}/imerg_korea.nc" "imerg"
+convert_to_tif "${TEMP_PATH}/terraclimate_korea.nc" "terraclimate"
