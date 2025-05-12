@@ -1,7 +1,7 @@
 # ---------------------------
-# User parameters
+# Set environments
 # ---------------------------
-START_YEAR=1981
+START_YEAR=1999
 END_YEAR=2020
 REGION="korea"
 LON_MIN=123.00
