@@ -2,7 +2,7 @@
 setwd("..")
 setwd("your path")
 getwd()
- 
+
 # Load libraries ---------------------------------------------------------------
 library(raster)
 library(ggplot2)
