@@ -1,5 +1,6 @@
 # Note: Due to the large file size (~21 GB), input data are not included in the repository.
 # Users need to download the CSIF datasets manually at https://figshare.com/articles/CSIF/6387494
+# And then save them in the "./Data" folder
 
 # ==================================
 # Setup Environment 
