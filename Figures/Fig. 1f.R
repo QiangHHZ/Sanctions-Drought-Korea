@@ -13,6 +13,7 @@ library(rio)
 library(tidyverse)
 
 # Load and process SPI and CSIF data -------------------------------------------
+
 # Meteorological drought data (SPI)
 MeteorologicalDrought <- raster("./Results/Fig. 1c_SPI.tif")
 MeteorologicalDrought
@@ -54,6 +55,7 @@ AgriculturalProductivity_masked_ROK <- mask(AgriculturalProductivity_clipped_ROK
 plot(AgriculturalProductivity_masked_ROK)
 
 # Convert raster to data frames -------------------------------------------
+
 # DPRK
 MeteorologicalDrought_df_DPRK <- as.data.frame(rasterToPoints(MeteorologicalDrought_masked_DPRK))
 AgriculturalProductivity_df_DPRK <- as.data.frame(rasterToPoints(AgriculturalProductivity_masked_DPRK))
@@ -83,6 +85,7 @@ write.csv(df_ROK, file = "df_ROK.csv")
 
 
 # Load the merged data ---------------------------------------------------------
+
 df <- import("Data_DroughtCharacterization_SPI_CSIF_series.csv")
 
 df_Mete_long <- pivot_longer(df, cols = 1:2, names_to = "Country_Mete", values_to = "Mete")
@@ -93,6 +96,7 @@ df_long <- cbind(df_Mete_long, df_Agri_long) %>%
 glimpse(df_long)
 
 # Correlation analysis ---------------------------------------------------------
+
 # DPRK
 correlation_DPRK <- cor(df_DPRK$Mete_DPRK, df_DPRK$Agri_DPRK, use = "complete.obs")
 print(paste("Correlation coefficient (DPRK):", correlation_DPRK))
@@ -102,6 +106,7 @@ correlation_ROK <- cor(df_ROK$Mete_ROK, df_ROK$Agri_ROK, use = "complete.obs")
 print(paste("Correlation coefficient (ROK):", correlation_ROK))
 
 # Visualization ----------------------------------------------------------------
+
 p <- ggplot(df_long, aes(x = Mete, y = Agri, color = Country_Mete)) +
   geom_point(alpha = 0.1, shape = 16) +   
   geom_smooth(method = "lm", linewidth = 0.8) +  

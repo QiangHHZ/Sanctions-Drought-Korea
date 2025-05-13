@@ -17,6 +17,7 @@ library(ggsci)
 library(RColorBrewer)
 
 # ------------------ SPI ------------------ #
+
 spi_data <- read_excel("./Data/Data_MonthSeries_SPI.xlsx")
 glimpse(spi_data)
 
@@ -32,6 +33,7 @@ glimpse(spi_long)
 
 
 # ------------------ CSIF ------------------ #
+
 csif_data <- read_excel("./Data/Data_MonthSeries_CSIF.xlsx")
 glimpse(csif_data)
 
@@ -46,10 +48,12 @@ csif_long$csif <- factor(csif_long$csif,
 glimpse(csif_long)
 
 # ------------------ Data merging ------------------ #
+
 merged_data <- merge(spi_long, csif_long, by = "month", all = TRUE)
 glimpse(merged_data)
 
 # ------------------ Visualization ------------------ #
+
 p_spi_csif <- ggplot(merged_data, aes(month)) +
   geom_rect(aes(xmin = 6, xmax = 9, ymin = -Inf, ymax = Inf), fill = '#fee8c8', alpha = 0.3) +
   geom_hline(yintercept = 0, linetype = "dashed", size = 0.1, color = "red") +

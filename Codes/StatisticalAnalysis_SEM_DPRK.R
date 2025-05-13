@@ -1,8 +1,8 @@
-# =========================
-# Workspace & Package Setup
-# =========================
+# =====================
+# Setup Environment 
+# =====================
 
-# Set working directory
+# Working space
 setwd("your path")
 
 # Packages
@@ -37,7 +37,7 @@ data_slice <- data_slice %>%
          DPRK_CrudeOilImport,
          DPRK_ElectricityGeneration)
 
-# Standardize all variables 
+# Standardize variables 
 data_standardized <- as.data.frame(scale(data_slice))
 glimpse(data_standardized)
 

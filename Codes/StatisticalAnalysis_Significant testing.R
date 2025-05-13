@@ -1,7 +1,7 @@
-# Set working directory
+# Working space
 setwd("your path")
 
-# Load packages
+# Packages
 library(tidyverse)
 library(readxl)
 library(ggplot2)
@@ -52,7 +52,7 @@ create_boxplot <- function(df, var, y_label, y_limits, filename) {
   return(p)
 }
 
-# Plot A: Cropland equipped for irrigation
+# Plot: Cropland equipped for irrigation
 p1 <- create_boxplot(
   data_irrigation,
   DPRK_LandAreaEquippedForIrrigation,
@@ -61,7 +61,7 @@ p1 <- create_boxplot(
   "Fig2_irrigation.png"
 )
 
-# Plot B: Irrigated agriculture water use efficiency
+# Plot: Irrigated agriculture water use efficiency
 p2 <- create_boxplot(
   data_irrigation,
   DPRK_IrrigatedAgricultureWaterUseEfficiency,
@@ -75,4 +75,4 @@ combined_plot <- ggarrange(p1, p2, ncol = 2, labels = "auto", align = "v",
                            font.label = list(size = 12, color = "black", face = "plain"))
 combined_plot
 
-ggsave("Fig2_line_SignificantTesting.png", plot = combined_plot, height = 5, width = 12, units = "cm", dpi = 600)
+ggsave("Fig. S19_SignificantTesting.png", plot = combined_plot, height = 5, width = 12, units = "cm", dpi = 600)
