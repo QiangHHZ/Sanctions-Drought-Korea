@@ -24,17 +24,11 @@
 - R v4.2.1: Processes CSIF datasets to analyze spatial patterns of CSIF relative change. Run the script: *`./Codes/DroughtCharacterization_CSIF.R`*. On a standard desktop computer, processing takes about 2–3 days.
 - SPI Calculation: Processes precipitation datasets (TerraClimate, CHIRPS, and IMERG) for SPI calculation and outputs regional drought maps. Run the script: *`./Codes/DroughtCharacterization_SPI.txt`*. On a standard desktop computer, processing takes about 2–3 days. 
 
---- 
-
 ### Drought Propagation
 - Matlab 2021: The input dataset (*`./Data/Data_DroughtPropagation_RiceArea_CSIF/EVI/NIRv/LSWI.xlsx`*) is available in the repository. To generate results of propagation time and risk probability based on different VIs and different drought levels, users need to load the input dataset and run the provided script (*`./Codes/Drought propagation`*) in Matlab 2021. Running the demo script on a standard desktop computer should take about 3 days. 
 
---- 
-
 ### Statistics Analysis
 - R v4.2.1: The dataset (*`./Data/Data_Statistics.xlsx`*) is available in the repository, with with unit details provided in the excel file (*`./Data/Data_Statistics_UnitInfo.xlsx`*) and the sheet *`unit info`* within the *`./Data/Data_Statistics.xlsx`*. To generate SEM results, users need to load the dataset and then run the provided scripts (*`./Codes/StatisticalAnalysis_SEM_DPRK.R`* and *`./Codes/StatisticalAnalysis_SEM_ROK.R`*) in R studio or other compatible R environment. Running these script on a standard desktop computer should take tens of seconds. 
-
---- 
 
 ### Figure generation 
 - ArcGIS 10.7: To generation the Fig. 1a–d, the Users should load the corresponding `.tif` files:
