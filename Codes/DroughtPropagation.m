@@ -1,7 +1,7 @@
 clc;clear;
 % ================================Load the data======================================================
-RESPI =readmatrix ('Data_DroughtPropagation_RiceArea_SPI.xlsx');    
-RENDVI =readmatrix ('Data_DroughtPropagation_RiceArea_CSIF.xlsx')';  % CSIF/EVI/NIRv/LWSI
+RESPI =readmatrix ('./Data/Data_DroughtPropagation_RiceArea_SPI.xlsx');    
+RENDVI =readmatrix ('./Data/Data_DroughtPropagation_RiceArea_CSIF.xlsx')';  % CSIF/EVI/NIRv/LWSI
 % ================================Calculate the propagation time======================================================
 for i = 1:6     %3 and 6
     for ii = 1:size(RESPI,2)  

@@ -3,7 +3,7 @@
 # ===============================================================
 
 # Working space
-setwd("/Users/Qiang/Documents/R/Work/Drought/CSIF")
+setwd("your path")
 getwd()
 
 # Packages
