@@ -1,0 +1,12 @@
+The Fig. 1a–1d were generated using ArcGIS 10.7 by reading the corresponding .tiff files:
+
+Fig. 1a: Propagation Time — "./Figures/Fig_1a_PropagationTime.tif"
+
+Fig. 1b: Risk Probability — "./Figures/Fig_1b_RiskProbability.tif"
+
+Fig. 1c: SPI — "./Figures/Fig_1c_SPI.tif"
+
+Fig. 1d: CSIF Relative Change — "./Figures/Fig_1d_CSIF_RelativeChange.tif"
+
+These files are directly loaded into ArcGIS 10.7 for visualization. 
+Alternatively, they can be visualized using other GIS platforms like QGIS, R, and Python. 
