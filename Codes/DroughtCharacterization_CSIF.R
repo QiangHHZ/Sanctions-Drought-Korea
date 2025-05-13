@@ -90,7 +90,7 @@ for (i in doy) {
 
 # Load Korea shp and risk raster for masking
 korea <- read_sf('./Data/Others/Boundry_Korea.shp')
-rice_croped <- raster('./Data/Others/Rice_ResampleCSIF_korea.tif')
+rice_croped <- raster('./Data/Others/Rice_ResampletoCSIF_Korea.tif')
 
 # Loop for cropping and masking
 for (i in doy) {
