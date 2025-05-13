@@ -27,7 +27,7 @@
 --- 
 
 ### Drought Propagation
-- Matlab 2021: The input dataset (*`./Data/Data_DroughtPropagation_RiceArea_CSIF/EVI/NIRv/LSWI.xlsx`*) is available in the repository. To generate results of probability of vegetation in different drought levels, users need to load the dataset () and run the provided script (*`./Codes/Drought propagation`*) in Matlab 2021. Running the demo script on a standard desktop computer should take about 3 days. 
+- Matlab 2021: The input dataset (*`./Data/Data_DroughtPropagation_RiceArea_CSIF/EVI/NIRv/LSWI.xlsx`*) is available in the repository. To generate results of propagation time and risk probability based on different VIs and different drought levels, users need to load the input dataset and run the provided script (*`./Codes/Drought propagation`*) in Matlab 2021. Running the demo script on a standard desktop computer should take about 3 days. 
 
 --- 
 
