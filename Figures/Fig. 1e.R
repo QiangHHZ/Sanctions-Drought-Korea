@@ -1,9 +1,9 @@
-## Set Working Directory
+# working space
 setwd("..")
 setwd("your path")
 getwd()
 
-## Load Required Packages
+# packages
 library(tidyverse)
 library(rio)
 library(ggplot2)
@@ -16,46 +16,40 @@ library(ggpubr)
 library(ggsci)
 library(RColorBrewer)
 
-## ------------------ SPI Analysis ------------------ ##
+# ------------------ SPI ------------------ #
 spi_data <- read_excel("./Data/Data_MonthSeries_SPI.xlsx")
 glimpse(spi_data)
 
-# Select relevant cols
 spi_data <- spi_data %>% select(month, DPRK_SPI_2015, ROK_SPI_2015)
 
-# Long data
 spi_long <- pivot_longer(spi_data, cols = 2:3, names_to = "spi", values_to = "spi_value")
+glimpse(spi_long)
 
-# Factor levels
 spi_long$spi <- factor(spi_long$spi,
                        levels = c("DPRK_SPI_2015", "ROK_SPI_2015"),
                        labels = c("DPRK_SPI", "ROK_SPI"))
 glimpse(spi_long)
 
 
-## ------------------ CSIF Analysis ------------------ ##
+# ------------------ CSIF ------------------ #
 csif_data <- read_excel("./Data/Data_MonthSeries_CSIF.xlsx")
 glimpse(csif_data)
 
-# Select relevant cols
 csif_data <- csif_data %>% select(month, DPRK_relativechange, ROK_relativechange)
 
-# Long data
 csif_long <- pivot_longer(csif_data, cols = 2:3, names_to = "csif", values_to = "csif_value")
 
-# Factor levels
 csif_long$csif <- factor(csif_long$csif,
                          levels = c('DPRK_relativechange', 'ROK_relativechange'),
                          labels = c("DPRK_CSIF", "ROK_CSIF"))
 
 glimpse(csif_long)
 
-
-## ------------------ Data Merging ------------------ ##
-# Merge SPI and CSIF data by month
+# ------------------ Data merging ------------------ #
 merged_data <- merge(spi_long, csif_long, by = "month", all = TRUE)
+glimpse(merged_data)
 
-## ------------------ Visualization ------------------ ##
+# ------------------ Visualization ------------------ #
 p_spi_csif <- ggplot(merged_data, aes(month)) +
   geom_rect(aes(xmin = 6, xmax = 9, ymin = -Inf, ymax = Inf), fill = '#fee8c8', alpha = 0.3) +
   geom_hline(yintercept = 0, linetype = "dashed", size = 0.1, color = "red") +
@@ -100,5 +94,5 @@ p_spi_csif <- ggplot(merged_data, aes(month)) +
 
 p_spi_csif
 
-## Save 
+# Save 
 ggsave(filename = "Fig. 1e_SPI_CSIF_lineplot.png", height = 5, width = 8.5, units = "cm", dpi = 600)

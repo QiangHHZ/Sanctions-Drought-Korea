@@ -1,9 +1,9 @@
-# Set working directory --------------------------------------------------------
+# working space ----------------------------------------------------------------
 setwd("..")
 setwd("your path")
 getwd()
 
-# Load libraries ---------------------------------------------------------------
+# libraries --------------------------------------------------------------------
 library(raster)
 library(ggplot2)
 library(dplyr)
@@ -13,29 +13,28 @@ library(rio)
 library(tidyverse)
 
 # Load and process SPI and CSIF data -------------------------------------------
-# Load Meteorological Drought data (SPI index)
+# Meteorological drought data (SPI)
 MeteorologicalDrought <- raster("./Results/Fig. 1c_SPI.tif")
 MeteorologicalDrought
 
-# Load Agricultural Productivity data (CSIF Relative Change)
+# Agricultural productivity data (CSIF Relative Change)
 AgriculturalProductivity <- raster("./Results/Fig. 1d_CSIF_RelativeChange.tif")
 AgriculturalProductivity
 
-# Resample Meteorological Drought raster to match Agricultural Productivity resolution
 MeteorologicalDrought_resample <- resample(MeteorologicalDrought, AgriculturalProductivity, method = "bilinear")
 MeteorologicalDrought_resample
 AgriculturalProductivity
 
-# Load boundary data for DPRK and ROK
+# Boundary for the DPRK and ROK
 DPRK <- st_read("./Data/Others/Boundry_DPRK.shp")
 DPRK <- st_transform(DPRK, crs(MeteorologicalDrought))
-DPRK_sp <- as(DPRK, "Spatial")  # Convert sf object to Spatial object
+DPRK_sp <- as(DPRK, "Spatial")  
 
 ROK <- st_read("./Data/Others/Boundry_ROK.shp")
 ROK <- st_transform(ROK, crs(MeteorologicalDrought))
 ROK_sp <- as(ROK, "Spatial") 
 
-# Clip and mask the drought data for DPRK and ROK
+# Clip and mask for DPRK and ROK
 # DPRK
 MeteorologicalDrought_clipped_DPRK <- crop(MeteorologicalDrought_resample, DPRK_sp)
 MeteorologicalDrought_masked_DPRK <- mask(MeteorologicalDrought_clipped_DPRK, DPRK_sp)
@@ -54,16 +53,14 @@ AgriculturalProductivity_clipped_ROK <- crop(AgriculturalProductivity, ROK_sp)
 AgriculturalProductivity_masked_ROK <- mask(AgriculturalProductivity_clipped_ROK, ROK_sp)
 plot(AgriculturalProductivity_masked_ROK)
 
-# Convert raster data to data frames -------------------------------------------
+# Convert raster to data frames -------------------------------------------
 # DPRK
 MeteorologicalDrought_df_DPRK <- as.data.frame(rasterToPoints(MeteorologicalDrought_masked_DPRK))
 AgriculturalProductivity_df_DPRK <- as.data.frame(rasterToPoints(AgriculturalProductivity_masked_DPRK))
 
-# Rename columns for merging
 colnames(MeteorologicalDrought_df_DPRK) <- c("x", "y", "Mete_DPRK")
 colnames(AgriculturalProductivity_df_DPRK) <- c("x", "y", "Agri_DPRK")
 
-# Merge data frames by coordinates (x, y)
 df_DPRK <- merge(MeteorologicalDrought_df_DPRK, AgriculturalProductivity_df_DPRK, by = c("x", "y"))
 glimpse(df_DPRK)
 write.csv(df_DPRK, file = "df_DPRK.csv")
@@ -72,11 +69,9 @@ write.csv(df_DPRK, file = "df_DPRK.csv")
 MeteorologicalDrought_df_ROK <- as.data.frame(rasterToPoints(MeteorologicalDrought_masked_ROK))
 AgriculturalProductivity_df_ROK <- as.data.frame(rasterToPoints(AgriculturalProductivity_masked_ROK))
 
-# Rename columns for merging
 colnames(MeteorologicalDrought_df_ROK) <- c("x", "y", "Mete_ROK")
 colnames(AgriculturalProductivity_df_ROK) <- c("x", "y", "Agri_ROK")
 
-# Merge data frames by coordinates (x, y)
 df_ROK <- merge(MeteorologicalDrought_df_ROK, AgriculturalProductivity_df_ROK, by = c("x", "y"))
 glimpse(df_ROK)
 write.csv(df_ROK, file = "df_ROK.csv")
@@ -84,20 +79,18 @@ write.csv(df_ROK, file = "df_ROK.csv")
 
 # Note: the users should merge "df_DPRK.csv" and "df_ROK.csv" locally into a single CSV file: Data_DroughtCharacterization_SPI_CSIF_series.csv.
 # You can also find this file in "./Data/Data_DroughtCharacterization_SPI_CSIF_series.csv"
+# And then import the merged csv file for the remain analysis
 
-# Load the merged data for analysis --------------------------------------------
 
+# Load the merged data ---------------------------------------------------------
 df <- import("Data_DroughtCharacterization_SPI_CSIF_series.csv")
 
-# Pivot to long format for analysis
 df_Mete_long <- pivot_longer(df, cols = 1:2, names_to = "Country_Mete", values_to = "Mete")
 df_Agri_long <- pivot_longer(df, cols = 3:4, names_to = "Country_Agri", values_to = "Agri")
 
-# Combine data
 df_long <- cbind(df_Mete_long, df_Agri_long) %>% 
   dplyr::select(Country_Mete, Mete, Agri)
 glimpse(df_long)
-
 
 # Correlation analysis ---------------------------------------------------------
 # DPRK
@@ -133,5 +126,5 @@ p <- ggplot(df_long, aes(x = Mete, y = Agri, color = Country_Mete)) +
   scale_y_continuous(position = "right")
 p
 
-# Save the plot
-ggsave(filename = "Fig.1f_ScatterPlot_spi_CSIF.png", width = 7.5, height = 5, units = "cm", dpi = 600)
+# Save 
+ggsave(filename = "Fig.1f_ScatterPlot_SPI_CSIF.png", width = 7.5, height = 5, units = "cm", dpi = 600)

@@ -1,9 +1,9 @@
-# Set the working directory
+# Working directory
 setwd("..")
 setwd("your path")
 getwd()
 
-# Load required packages
+# Packages
 library(tidyverse)
 library(rio)
 library(ggplot2)
@@ -19,12 +19,11 @@ library(tidyr)
 library(dplyr)
 
 #*******************************************************************************
-# Rice Yield ###################################################################
+# Rice yield ###################################################################
 #*******************************************************************************
 data <- read_excel("./Data/Data_Statistics.xlsx")
 glimpse(data)
 
-# Select relevant columns
 data <- data %>% 
   select(year, DPRK_RiceYield, ROK_RiceYield)
 data <- data[-c(1:15),]
@@ -43,13 +42,12 @@ data_long <- pivot_longer(data, cols = 2:3, names_to = "rice", values_to = "valu
 data_long$rice <- factor(data_long$rice, levels = c("DPRK_RiceYield", "ROK_RiceYield"),
                          labels = c("DPRK", "ROK"))
 
-# 
 df_smoothed <- data_long %>%
   group_by(rice) %>%
   do(data.frame(year = seq(min(.$year), max(.$year), length.out = 10000),
                 smooth_value = approx(.$year, .$value, xout = seq(min(.$year), max(.$year), length.out = 10000))$y))
 
-# visualization
+# Visualization
 p_rice <- ggplot(data_long, aes(year, value)) + 
   annotate("text", size = 2, x = 2011, y = 2.8, label = paste("CV =", round(dprk_cv, 2)), color = "#DE2D26") +
   annotate("text", size = 2, x = 2011, y = 7.8, label = paste("CV =", round(rok_cv, 2)), color = "#174994") +
@@ -82,14 +80,13 @@ p_rice <- ggplot(data_long, aes(year, value)) +
   scale_x_continuous(limits = c(1980, 2020), breaks = c(1980, 1990, 2000, 2010, 2020),
                      labels = c("1980", "1990", "2000", "2010", "2020")) +
   scale_y_continuous(limits = c(1, 9), breaks = c(2, 4, 6, 8),
-                     labels = c("2", "4", "6", "8"), expand = c(0, 0))
+                     labels = c("2", "4", "6", "8"), expand = c(0, 0)
+                     )
+
 p_rice
 
-
-
-
 #*******************************************************************************
-# Land Area Equipped for Irrigation #############################################
+# Land area equipped for irrigation #############################################
 #*******************************************************************************
 data <- read_excel("./Data/Data_Statistics.xlsx")
 glimpse(data)
@@ -99,10 +96,10 @@ data_select <- dplyr::select(data, year,
                              ROK_LandAreaEquippedForIrrigation)
 glimpse(data_select)
 
-# long data
+# Long data
 data_long_equipped <- pivot_longer(data_select, cols = 2:3, names_to = "equipped", values_to = "value_equipped")
 
-# visualization
+# Visualization
 p_equipped <- ggplot(data_long_equipped) + 
   geom_line(aes(x = year, y = value_equipped, color = equipped), size = 0.6, alpha = 0.9) +
   
@@ -137,14 +134,11 @@ p_equipped <- ggplot(data_long_equipped) +
         axis.ticks.length = unit(0.1, "cm"),
         axis.ticks = element_line(color = "black", size = 0.2)
   )
+
 p_equipped
 
-
-
-
-
 #*******************************************************************************
-# Total Dam Capacity ###########################################################
+# Total dam capacity ###########################################################
 #*******************************************************************************
 data <- read_excel("./Data/Data_Statistics.xlsx")
 glimpse(data)
@@ -154,10 +148,10 @@ data_select <- dplyr::select(data, year,
                              ROK_TotalDamCapacity = SK_TotalDamCapacity)
 glimpse(data_select)
 
-# long data
+# Long data
 data_long_dam <- pivot_longer(data_select, cols = 2:3, names_to = "dam", values_to = "value_dam")
 
-# Data visualization
+# Visualization
 p_dam <- ggplot(data_long_dam) + 
   geom_line(aes(x = year, y = value_dam, color = dam), size = 0.6, alpha = 0.9) +
   
@@ -192,10 +186,11 @@ p_dam <- ggplot(data_long_dam) +
         axis.text.x = element_text(size = 7, color = "black"),
         axis.text.y = element_text(size = 7, color = "black")
   )
+
 p_dam
 
 #*******************************************************************************
-# Irrigated Agriculture Water Use Efficiency ###################################
+# Irrigated agriculture water use efficiency ###################################
 #*******************************************************************************
 data <- read_excel("./Data/Data_Statistics.xlsx")
 glimpse(data)
@@ -205,10 +200,10 @@ data_select <- dplyr::select(data, year,
                              ROK_IrrigatedAgricultureWaterUseEfficiency)
 glimpse(data_select)
 
-# long data
+# Long data
 data_long_wue <- pivot_longer(data_select, cols = 2:3, names_to = "wue", values_to = "value_wue")
 
-# Data visualization
+# Visualization
 p_wue <- ggplot(data_long_wue) + 
   geom_line(aes(x = year, y = value_wue, color = wue), size = 0.6, alpha = 0.9) +
   
@@ -243,10 +238,11 @@ p_wue <- ggplot(data_long_wue) +
         axis.text.x = element_text(size = 7, color = "black"),
         axis.text.y = element_text(size = 7, color = "black")
   )
+
 p_wue
 
 #*******************************************************************************
-# Water Consumption Coefficient ################################################
+# Water consumption coefficient ################################################
 #*******************************************************************************
 data <- read_excel("./Data/Data_Statistics.xlsx")
 glimpse(data)
@@ -256,10 +252,10 @@ data_select <- dplyr::select(data, year,
                              ROK_WaterConsumptionCoefficient)
 glimpse(data_select)
 
-# long data
+# Long data
 data_long_wcc <- pivot_longer(data_select, cols = 2:3, names_to = "wcc", values_to = "value_wcc")
 
-# Data visualization
+# Visualization
 p_wcc <- ggplot(data_long_wcc) + 
   geom_line(aes(x = year, y = value_wcc, color = wcc), size = 0.6, alpha = 0.9) +
   
@@ -294,13 +290,11 @@ p_wcc <- ggplot(data_long_wcc) +
         axis.text.x = element_text(size = 7, color = "black"),
         axis.text.y = element_text(size = 7, color = "black")
   )
+
 p_wcc
 
-
-
-
 #*******************************************************************************
-# Electricity Generation #######################################################
+# Electricity generation #######################################################
 #*******************************************************************************
 data <- read_excel("./Data/Data_Statistics.xlsx")
 glimpse(data)
@@ -310,10 +304,10 @@ data_select <- dplyr::select(data, year,
                              ROK_ElectricityGeneration)
 glimpse(data_select)
 
-# long data
+# Long data
 data_long <- pivot_longer(data_select, cols = 2:3, names_to = "elec", values_to = "value")
 
-# Data visualization
+# Visualization
 p_electricity <- ggplot(data_long) + 
   geom_line(aes(x = year, y = value, color = elec), size = 0.6, alpha = 0.9) +
   
@@ -342,12 +336,11 @@ p_electricity <- ggplot(data_long) +
         axis.text.x = element_text(size = 7, color = "black"),
         axis.text.y = element_text(size = 7, color = "black")
   )
+
 p_electricity
 
-
-
 #*******************************************************************************
-# Coal Production ##############################################################
+# Coal production ##############################################################
 #*******************************************************************************
 data <- read_excel("Data_Statistics.xlsx")
 glimpse(data)
@@ -357,10 +350,10 @@ data_select <- dplyr::select(data, year,
                              ROK_CoalProduction)
 glimpse(data_select)
 
-# long data
+# Long data
 data_long <- pivot_longer(data_select, cols = 2:3, names_to = "coalprod", values_to = "value")
 
-# Data visualization
+# Visualization
 p_coalprod <- ggplot(data_long) + 
   geom_line(aes(x = year, y = value, color = coalprod), size = 0.6, alpha = 0.9) +
   
@@ -389,11 +382,12 @@ p_coalprod <- ggplot(data_long) +
         axis.text.x = element_text(size = 7, color = "black"),
         axis.text.y = element_text(size = 7, color = "black")
   )
+
 p_coalprod
 
 
 #*******************************************************************************
-# Crude Oil Import #############################################################
+# Crude oil import #############################################################
 #*******************************************************************************
 data <- read_excel("./Data/Data_Statistics.xlsx")
 glimpse(data)
@@ -403,10 +397,10 @@ data_select <- dplyr::select(data, year,
                              ROK_CrudeOilImport)
 glimpse(data_select)
 
-# long data
+# Long data
 data_long <- pivot_longer(data_select, cols = 2:3, names_to = "oil", values_to = "value")
 
-# Data visualization
+# Visualization
 p_oil <- ggplot(data_long) + 
   geom_line(aes(x = year, y = value, color = oil), size = 0.6, alpha = 0.9) +
   
@@ -435,11 +429,12 @@ p_oil <- ggplot(data_long) +
         axis.text.x = element_text(size = 7, color = "black"),
         axis.text.y = element_text(size = 7, color = "black")
   )
+
 p_oil
 
 
 #*******************************************************************************
-# Coal Import ##################################################################
+# Coal import ##################################################################
 #*******************************************************************************
 data <- read_excel("./Data/Data_Statistics.xlsx")
 glimpse(data)
@@ -449,10 +444,10 @@ data_select <- dplyr::select(data, year,
                              ROK_CoalImport)
 glimpse(data_select)
 
-# long data
+# Long data
 data_long <- pivot_longer(data_select, cols = 2:3, names_to = "coal", values_to = "value")
 
-# Data visualization
+# Visualization
 p_coal <- ggplot(data_long) + 
   geom_line(aes(x = year, y = value, color = coal), size = 0.6, alpha = 0.9) +
   
@@ -481,11 +476,12 @@ p_coal <- ggplot(data_long) +
         axis.text.x = element_text(size = 7, color = "black"),
         axis.text.y = element_text(size = 7, color = "black")
   )
+
 p_coal
 
 
 #*******************************************************************************
-# combined plot ################################################################
+# Combined plot ################################################################
 #*******************************************************************************
 library("Rmisc")
 library("ggpubr")
@@ -494,5 +490,10 @@ library("patchwork")
 plot_grid(p_rice, p_equipped, p_dam, p_wue, p_wcc, p_electricity, p_coalprod, p_oil, p_coal, 
           ncol = 3, 
           align = "v")
-# save 
+
+# Save 
 ggsave(filename="Fig.2b-j.png",height=9, width=15, units="cm",dpi = 600)
+
+
+
+
