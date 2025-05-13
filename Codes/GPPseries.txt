@@ -1,0 +1,46 @@
+// UPLOAD data to GEE
+var DPRK = ee.FeatureCollection("users/QIANG/Boundry/Boundry_NK"),
+    ROK = ee.FeatureCollection("users/QIANG/Boundry/Boundry_SK"),
+    Rice_Korea_500m_sameMOD = ee.Image("users/QiangZhang/Rice_neAsia_v6v01_2016_WGS84_SameMOD_extract");
+
+// Functions 
+function updatemask(img){
+  return img.updateMask(Rice_Korea_500m_sameMOD);
+}
+
+var dataset = ee.ImageCollection('CAS/IGSNRR/PML/V2_v017')
+                  .filter(ee.Filter.date('2000-01-01', '2022-12-31'))
+                  .select('GPP')
+print(dataset,'dataset')
+
+// ***Preparing the dataset we need***
+var Anomalyyear = dataset
+                  .filter(ee.Filter.calendarRange(2015,2015,'year'))
+                  // .filter(ee.Filter.calendarRange(10,10,'month'))
+                  // .filter(ee.Filter.calendarRange(235,244,'day_of_year'))
+                  .map(updatemask)
+                  ;
+print(Anomalyyear,'Anomalyyear')
+// Map.addLayer(Anomalyyear.first(), {}, 'GPP_Anomalyyear')
+
+// ***Monthly composite***
+var start = ee.Date('2015-01-01');
+
+var Anomalyyear_Composites = ee.ImageCollection(ee.List.sequence(1,12,1).map(function(m){
+  var m = ee.Number(m)
+  var t = start.advance(m, 'month').millis();
+  var filtered = Anomalyyear.filter(ee.Filter.calendarRange(m, m.add(1), 'month')).reduce(ee.Reducer.sum());
+  var bandLength = filtered.bandNames().length();
+     
+  return filtered.set('system:time_start',start.advance(m, 'month'),'month',m,'t',t,'length',bandLength);
+}));
+print(Anomalyyear_Composites,'Anomalyyear_Composites')
+
+
+// ***Visualization***
+var VI_series = ui.Chart.image.series(Anomalyyear_Composites, DPRK,  ee.Reducer.mean(), 500)
+                                          .setOptions({title: 'Anomalyyear time series of GPP of DPRK'});
+print(VI_series);
+var VI_series = ui.Chart.image.series(Anomalyyear_Composites, ROK,  ee.Reducer.mean(), 500)
+                                          .setOptions({title: 'Anomalyyear time series of GPP of ROK'});
+print(VI_series);
