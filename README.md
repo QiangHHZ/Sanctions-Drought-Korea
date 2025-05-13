@@ -6,14 +6,14 @@
 - **Dependencies:**
   - **Google Earth Engine:** Requires a Google account for activation and access.
   - **R v4.2.1:** Requires the installation of the following R packages: `"tidyverse", "rio", "ggplot2", "ggplotify", "ggimage", "reshape2", "cowplot", "readxl", "ggpubr", "ggsci", "RColorBrewer", "ggsignif", "tidyr", "dplyr", "raster", "rgdal"`
+  - **Matlab 2021:** No additional packages are required. 
+  - **ArcGIS 10.7:** No additional packages are required. 
 
 --- 
 
 ## Installation Guide
 - **Google Earth Engine:** Requires registration with a Google account for access. No additional installation is needed for the cloud-based platform. 
 - **R v4.2.1:** Install the required R packages using the `install.packages()` function. The full installation process may take anywhere from a few minutes to several tens of minutes on a standard desktop computer, depending on the internet connection speed. 
-- **Matlab 2021:** No additional packages are required. 
-- **ArcGIS 10.7:** No additional packages are required. 
 
 --- 
 
