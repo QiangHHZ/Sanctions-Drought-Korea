@@ -3,7 +3,7 @@
 # And then save them in the "./Data" folder to run the following script 
 
 # ==================================
-# Setup Environment 
+# Setup environment 
 # =================================
 
 # Working space
@@ -23,7 +23,7 @@ library(ncdf4)
 detectCores() 
 
 # ===================================
-# Define Paths
+# Define paths
 # ================================
 
 input_dir <- "./Data"
@@ -37,7 +37,7 @@ dir.create(baseline_output_dir, showWarnings = FALSE, recursive = TRUE)
 dir.create(mask_output_dir, showWarnings = FALSE, recursive = TRUE)
 
 # ================================
-# Convert NC to TIF
+# Convert .nc to .tif
 # ================================
 
 convert_nc_to_tif <- function(years) {
@@ -61,7 +61,7 @@ convert_nc_to_tif <- function(years) {
 convert_nc_to_tif(c(baseline_years, drought_year))
 
 # ================================
-# Calculate Baseline
+# Calculate baseline
 # ================================
 
 # Generate 4-day interval date strings
@@ -85,7 +85,7 @@ for (i in doy) {
 }
 
 # ================================
-# Crop and Mask
+# Crop and mask
 # ================================
 
 # Load Korea shp and risk raster for masking
@@ -115,7 +115,7 @@ for (i in doy) {
 }
 
 # ================================================
-# Calculate Max, Min, and Range of baseline
+# Calculate max, min, and range of baseline
 # =============================================
 
 maxminfun <- function(ts_org) {
@@ -137,7 +137,7 @@ writeRaster(result,
 endCluster()
 
 # ================================
-# Calculate Growing Season Mean
+# Calculate growing season mean
 # ================================
 
 meanfun <- function(ts_org) {
@@ -159,7 +159,7 @@ growing_baseline <- raster(file.path(output_dir, "CSIF_baseline_growing.tif"))
 range_raster <- raster(file.path(output_dir, "CSIF_baseline_range.tif"))
 
 # ================================
-# Calculate Relative Change
+# Calculate relative change
 # ================================
 
 RelativeChange_before <- (growing_2015 - growing_baseline) / range_raster * 100
