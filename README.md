@@ -37,7 +37,7 @@
 --- 
 
 ### Figure generation 
-- **ArcGIS 10.7:** To generation the Fig. 1a–d, the Users should load the corresponding `.tif` files:
+- ArcGIS 10.7: To generation the Fig. 1a–d, the Users should load the corresponding `.tif` files:
   - *`./Figures/Fig_1a_PropagationTime.tif`*
   - *`./Figures/Fig_1b_RiskProbability.tif`*
   - *`./Figures/Fig_1c_SPI.tif`*
